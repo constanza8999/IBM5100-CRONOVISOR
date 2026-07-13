@@ -1,0 +1,763 @@
+/* ── CSS Variables ─────────────────────────────────────────────── */
+:root {
+  --crt-green: #00ff41;
+  --crt-green-dim: #00cc33;
+  --crt-green-dark: #003b00;
+  --crt-amber: #ffb000;
+  --crt-bg: #0a0a0a;
+  --chassis-beige: #d4c9a8;
+  --chassis-beige-light: #e8dfc4;
+  --chassis-beige-dark: #b8a97e;
+  --chassis-border: #8a7d5e;
+  --chassis-shadow: #5a4f38;
+  --panel-bg: #1a1a1a;
+  --panel-border: #333;
+  --text-light: #e0e0e0;
+  --font-mono: 'Courier New', 'Consolas', 'Liberation Mono', monospace;
+  --font-display: 'VT323', 'Courier New', monospace;
+  --transition-fast: 0.2s ease;
+  --transition-med: 0.4s ease;
+}
+
+/* ── Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── Base ──────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+  font-family: var(--font-mono);
+  color: var(--text-light);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0,255,65,0.03) 0%, transparent 70%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,255,65,0.02) 2px,
+      rgba(0,255,65,0.02) 4px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Scanlines Overlay ─────────────────────────────────────────── */
+.scanlines {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── CRT Screen Glow ───────────────────────────────────────────── */
+.crt-glow {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0,255,65,0.04) 80%,
+    rgba(0,0,0,0.3) 100%
+  );
+  pointer-events: none;
+  z-index: 100;
+  border-radius: inherit;
+}
+
+/* ── Header ────────────────────────────────────────────────────── */
+.header {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 30px 20px 10px;
+}
+
+.header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  color: var(--crt-green);
+  text-shadow:
+    0 0 10px var(--crt-green),
+    0 0 20px var(--crt-green),
+    0 0 40px var(--crt-green-dark);
+  letter-spacing: 4px;
+  margin-bottom: 5px;
+}
+
+.header .subtitle {
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+  color: rgba(0,255,65,0.6);
+  letter-spacing: 2px;
+}
+
+.header .badges {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  border: 1px solid var(--crt-green-dark);
+  color: var(--crt-green);
+  background: rgba(0,255,65,0.05);
+}
+
+/* ── IBM 5100 Chassis ──────────────────────────────────────────── */
+.ibm-chassis {
+  position: relative;
+  z-index: 10;
+  max-width: 950px;
+  margin: 20px auto;
+  background: linear-gradient(180deg,
+    var(--chassis-beige-light) 0%,
+    var(--chassis-beige) 40%,
+    var(--chassis-beige-dark) 100%
+  );
+  border: 3px solid var(--chassis-border);
+  border-radius: 12px 12px 8px 8px;
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    inset 0 -2px 0 rgba(0,0,0,0.15);
+  padding: 20px 25px 25px;
+}
+
+/* IBM Logo */
+.ibm-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--chassis-border);
+}
+
+.ibm-logo .logo-text {
+  font-family: 'Georgia', serif;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--chassis-shadow);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+}
+
+.ibm-logo .model-badge {
+  font-size: 0.7rem;
+  color: var(--chassis-shadow);
+  border: 1px solid var(--chassis-border);
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+}
+
+/* ── CRT Screen ────────────────────────────────────────────────── */
+.crt-container {
+  position: relative;
+  background: var(--crt-bg);
+  border: 4px solid var(--chassis-shadow);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+  margin-bottom: 8px;
+}
+
+.crt-screen {
+  position: relative;
+  background: #050505;
+  border-radius: 4px;
+  min-height: 420px;
+  max-height: 70vh;
+  overflow: hidden;
+  box-shadow: inset 0 0 50px rgba(0,255,65,0.03);
+}
+
+/* Power LED */
+.power-led {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+
+.power-led .led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--crt-green);
+  box-shadow: 0 0 6px var(--crt-green);
+  animation: led-pulse 2s ease-in-out infinite;
+}
+
+.power-led .led-label {
+  font-size: 0.6rem;
+  color: var(--chassis-shadow);
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+}
+
+@keyframes led-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ── Terminal ──────────────────────────────────────────────────── */
+#terminal {
+  position: relative;
+  z-index: 10;
+  padding: 15px;
+  height: 100%;
+  min-height: 420px;
+  max-height: 70vh;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+  line-height: 1.5;
+  color: var(--crt-green);
+  text-shadow:
+    0 0 5px var(--crt-green),
+    0 0 10px var(--crt-green-dim);
+  white-space: pre-wrap;
+  word-break: break-word;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,255,65,0.2) transparent;
+}
+
+#terminal::-webkit-scrollbar {
+  width: 4px;
+}
+#terminal::-webkit-scrollbar-track {
+  background: transparent;
+}
+#terminal::-webkit-scrollbar-thumb {
+  background: rgba(0,255,65,0.2);
+  border-radius: 2px;
+}
+
+#terminal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,255,65,0.015) 3px,
+    rgba(0,255,65,0.015) 6px
+  );
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.3;
+}
+
+#input-line {
+  display: inline;
+}
+
+.prompt-char {
+  color: var(--crt-green);
+  opacity: 0.8;
+  user-select: none;
+}
+
+#input {
+  background: transparent;
+  border: none;
+  color: var(--crt-green);
+  font-family: var(--font-mono);
+  font-size: inherit;
+  outline: none;
+  caret-color: var(--crt-green);
+  text-shadow: inherit;
+  width: 70%;
+  padding: 0;
+  margin: 0;
+}
+
+/* ── Keyboard / Controls Area ──────────────────────────────────── */
+.controls-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 4px 4px;
+  border-top: 2px solid var(--chassis-border);
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.key-btn {
+  padding: 5px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  background: linear-gradient(180deg, #e8dfc4, #c4b896);
+  border: 1px solid var(--chassis-border);
+  border-bottom: 3px solid var(--chassis-shadow);
+  border-radius: 3px;
+  color: #3a3020;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+.key-btn:hover {
+  background: linear-gradient(180deg, #f0e8d0, #d0c4a0);
+  border-bottom-width: 2px;
+  transform: translateY(1px);
+}
+
+.key-btn:active {
+  border-bottom-width: 1px;
+  transform: translateY(2px);
+}
+
+.key-btn.green {
+  background: linear-gradient(180deg, #2d8a2d, #1a5c1a);
+  border-color: #0a3a0a;
+  border-bottom-color: #052505;
+  color: var(--crt-green);
+  text-shadow: 0 0 5px var(--crt-green);
+}
+
+.key-btn.green:hover {
+  background: linear-gradient(180deg, #3a9a3a, #206c20);
+}
+
+.tape-indicators {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.tape-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.55rem;
+  color: var(--chassis-shadow);
+  font-family: var(--font-mono);
+}
+
+.tape-indicator .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #666;
+}
+
+.tape-indicator .dot.active {
+  background: var(--crt-green);
+  box-shadow: 0 0 4px var(--crt-green);
+  animation: led-pulse 1s ease-in-out infinite;
+}
+
+/* ── Status Bar ────────────────────────────────────────────────── */
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 10px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 3px;
+  margin-top: 4px;
+  font-size: 0.6rem;
+  color: var(--chassis-shadow);
+  font-family: var(--font-mono);
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-item .label {
+  opacity: 0.7;
+}
+
+.status-item .value {
+  font-weight: bold;
+}
+
+/* ── Sections Below ────────────────────────────────────────────── */
+.sections {
+  position: relative;
+  z-index: 10;
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 30px 20px 60px;
+}
+
+.section-card {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(0,255,65,0.15);
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 25px;
+  backdrop-filter: blur(10px);
+}
+
+.section-card h2 {
+  font-family: var(--font-display);
+  color: var(--crt-green);
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  text-shadow: 0 0 10px var(--crt-green-dark);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-card h3 {
+  color: var(--crt-green-dim);
+  font-size: 1rem;
+  margin: 20px 0 10px;
+  font-family: var(--font-mono);
+}
+
+.section-card p,
+.section-card li {
+  color: rgba(224,224,224,0.85);
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+.section-card ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.section-card ul li {
+  padding-left: 20px;
+  position: relative;
+}
+
+.section-card ul li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--crt-green);
+  opacity: 0.6;
+}
+
+/* ── Commands Table ────────────────────────────────────────────── */
+.commands-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 0.8rem;
+}
+
+.commands-table th,
+.commands-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0,255,65,0.1);
+}
+
+.commands-table th {
+  color: var(--crt-green);
+  font-weight: normal;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  background: rgba(0,255,65,0.05);
+}
+
+.commands-table td {
+  color: rgba(224,224,224,0.8);
+  font-family: var(--font-mono);
+}
+
+.commands-table tr:hover td {
+  color: var(--crt-green);
+  background: rgba(0,255,65,0.03);
+}
+
+.commands-table .cmd {
+  color: var(--crt-green);
+  font-weight: bold;
+}
+
+/* ── Footer ────────────────────────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.7rem;
+  color: rgba(0,255,65,0.3);
+  position: relative;
+  z-index: 10;
+}
+
+.footer a {
+  color: var(--crt-green);
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.footer a:hover {
+  opacity: 1;
+  text-shadow: 0 0 5px var(--crt-green);
+}
+
+/* ── Scroll Progress Bar ───────────────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--crt-green-dark), var(--crt-green), var(--crt-green-dim));
+  z-index: 10000;
+  width: 0%;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 10px var(--crt-green);
+}
+
+/* ── Back to Top ───────────────────────────────────────────────── */
+.back-to-top {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 44px;
+  height: 44px;
+  background: rgba(0,255,65,0.1);
+  border: 1px solid var(--crt-green-dark);
+  border-radius: 50%;
+  color: var(--crt-green);
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all var(--transition-med);
+  backdrop-filter: blur(5px);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: rgba(0,255,65,0.2);
+  border-color: var(--crt-green);
+  box-shadow: 0 0 20px rgba(0,255,65,0.2);
+  transform: translateY(-3px);
+}
+
+/* ── Loading Screen ────────────────────────────────────────────── */
+.loading-screen {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #050505;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-screen .loading-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--crt-green);
+  text-shadow: 0 0 10px var(--crt-green);
+  margin-bottom: 15px;
+  letter-spacing: 3px;
+}
+
+.loading-screen .loading-subtext {
+  font-size: 0.7rem;
+  color: rgba(0,255,65,0.5);
+  margin-bottom: 25px;
+  min-height: 1.2em;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+
+.loading-bar-container {
+  width: 250px;
+  height: 3px;
+  background: rgba(0,255,65,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loading-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--crt-green-dark), var(--crt-green));
+  border-radius: 2px;
+  animation: loading-fill 2.5s ease-out forwards;
+  box-shadow: 0 0 10px var(--crt-green);
+}
+
+@keyframes loading-fill {
+  0% { width: 0%; }
+  30% { width: 35%; }
+  60% { width: 65%; }
+  85% { width: 88%; }
+  100% { width: 100%; }
+}
+
+/* ── Particle Background ───────────────────────────────────────── */
+#particles-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Reduced Motion ────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .loading-bar {
+    animation: none !important;
+    width: 100% !important;
+  }
+  .led {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  .power-led .led {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .ibm-chassis {
+    margin: 10px;
+    padding: 12px 14px 18px;
+    border-radius: 8px;
+  }
+
+  .crt-screen,
+  #terminal {
+    min-height: 300px;
+    max-height: 55vh;
+  }
+
+  #terminal {
+    font-size: 0.7rem;
+    padding: 10px;
+  }
+
+  .controls-area {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .control-group {
+    justify-content: center;
+  }
+
+  .key-btn {
+    font-size: 0.55rem;
+    padding: 4px 8px;
+  }
+
+  .section-card {
+    padding: 20px;
+    margin: 0 10px 20px;
+  }
+
+  .commands-table {
+    font-size: 0.65rem;
+  }
+  .commands-table th,
+  .commands-table td {
+    padding: 5px 8px;
+  }
+
+  .ibm-logo .logo-text {
+    font-size: 1rem;
+    letter-spacing: 3px;
+  }
+
+  .header h1 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ibm-chassis {
+    padding: 8px 10px 14px;
+  }
+  .crt-screen,
+  #terminal {
+    min-height: 250px;
+    max-height: 50vh;
+  }
+  #terminal {
+    font-size: 0.6rem;
+    padding: 8px;
+  }
+  .key-btn {
+    font-size: 0.5rem;
+    padding: 3px 6px;
+  }
+  .tape-indicators {
+    display: none;
+  }
+}

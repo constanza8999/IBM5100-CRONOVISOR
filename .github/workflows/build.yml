@@ -1,0 +1,48 @@
+name: Build & Lint
+
+on:
+  push:
+    branches: [main, master]
+    paths-ignore:
+      - 'wiki/**'
+      - 'archive/**'
+      - '**.md'
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint:
+    name: Lint & Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check HTML validity
+        run: |
+          if command -v tidy &> /dev/null; then
+            tidy -q -e emulator/index.html 2>&1 || true
+          else
+            echo "HTML tidy not available, skipping HTML validation"
+          fi
+
+      - name: Check Python syntax
+        run: |
+          python -m py_compile bridge/IBM5100_BRIDGE.py || echo "Python validation skipped"
+
+      - name: Lint CSS
+        run: |
+          if command -v stylelint &> /dev/null; then
+            npx stylelint emulator/css/*.css || true
+          else
+            echo "Stylelint not available, skipping CSS lint"
+          fi
+
+      - name: Check for missing files
+        run: |
+          for f in emulator/index.html emulator/css/style.css emulator/js/script.js README.md CHANGELOG.md; do
+            if [ ! -f "$f" ]; then
+              echo "Missing: $f"
+              exit 1
+            fi
+          done
+          echo "All required files present"

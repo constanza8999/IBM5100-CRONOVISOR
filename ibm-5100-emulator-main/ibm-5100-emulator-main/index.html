@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IBM 5100 Emulator</title>
+<style>
+  body {
+    background: black;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Courier New", monospace;
+    color: #00ff00;
+    text-shadow: 0 0 2px #00ff00, 0 0 4px #00ff00;
+  }
+  #terminal {
+    width: 90%;
+    max-width: 1000px;
+    height: 80vh;
+    border: 2px solid #00ff00;
+    padding: 15px;
+    overflow-y: auto;
+    background: black;
+    box-shadow: 0 0 8px #00ff00 inset;
+    white-space: pre-wrap;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  #input {
+    border: none;
+    background: black;
+    color: #00ff00;
+    font-family: inherit;
+    font-size: 16px;
+    outline: none;
+    width: 80%;
+    caret-color: #00ff00;
+    text-shadow: inherit;
+  }
+</style>
+</head>
+<body>
+  <div id="terminal"></div>
+
+<script>
+  const terminal = document.getElementById("terminal");
+  let input;
+  let mode = "basic";                 // "basic" or "apl"
+  let program = {};                   // BASIC program lines
+  let bootLog = "";                   // keep boot text so clear doesn't nuke it
+
+  function output(text) {
+    const prompt = document.getElementById("prompt");
+    if (prompt) {
+      prompt.insertAdjacentHTML("beforebegin", text + "\n");
+    } else {
+      terminal.innerHTML += text + "\n";
+    }
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+
+  function bootSequence() {
+    const lines = [
+      "IBM 5100 PERSONAL COMPUTER - MODEL 5100",
+      "PALM MICROCODE MONITOR 1.0",
+      "BASIC/APL HYBRID FIRMWARE © IBM 1975",
+      "",
+      "MEMORY SIZE: 64,000 BYTES    TAPE: DC300",
+      "TERMINAL: 16x64   PHOSPHOR: P1 (GREEN)",
+      "",
+      "SELF TEST ................. OK",
+      "ROM CHECK ................. OK",
+      "TAPE DRIVE ................ OK",
+      "",
+      "READY.",
+      "Type HELP for commands.",
+      ""
+    ];
+    let i = 0;
+    function showLine() {
+      if (i < lines.length) {
+        output(lines[i]);
+        bootLog += lines[i] + "\n";
+        i++;
+        setTimeout(showLine, 400);
+      } else {
+        startPrompt();
+      }
+    }
+    showLine();
+  }
+
+  function startPrompt() {
+    terminal.innerHTML += "<span id='prompt'>></span> <input id='input' type='text' autofocus />";
+    input = document.getElementById("input");
+    input.focus();
+
+    input.onkeydown = function(e) {
+      if (e.key === "Enter") {
+        // capture + normalize
+        const raw = input.value;
+        const cmd = raw.trim().toLowerCase();
+        // echo typed command
+        output("> " + cmd);
+
+        // remove current prompt + input to finalize this line
+        const promptEl = document.getElementById("prompt");
+        if (promptEl) promptEl.remove();
+        input.remove();
+
+        // process command
+        processCommand(cmd);
+      }
+    };
+  }
+
+  function processCommand(cmd) {
+    // BASIC line definition (e.g., "10 print "hello"")
+    if (mode === "basic" && /^\d+ /.test(cmd)) {
+      const lineNum = parseInt(cmd.split(" ")[0]);
+      const code = cmd.substring(cmd.indexOf(" ") + 1);
+      program[lineNum] = code;
+      return startPrompt();
+    }
+
+    if (cmd === "help") {
+      output("Available Commands:");
+      output(" BASIC MODE:");
+      output("   [line#] statement");
+      output("   run   - run program");
+      output("   list  - list program");
+      output("   new   - clear program");
+      output("   print <expr>");
+      output("");
+      output(" APL MODE:");
+      output("   2+2, 3×4, 10÷2");
+      output("");
+      output(" GENERAL:");
+      output("   mode basic / mode apl");
+      output("   info, clear");
+      output("   time travel, okabe");
+      return startPrompt();
+    }
+
+    if (cmd === "info") {
+      output("IBM 5100 Information:");
+      output(" Released: September 1975");
+      output(" First portable computer (weighed ~55 lbs).");
+      output(" CPU: IBM PALM (16-bit) microprocessor.");
+      output(" RAM: 16 KB to 64 KB.");
+      output(" ROM: Contained both BASIC and APL interpreters.");
+      output(" Storage: DC300 tape cartridge drive.");
+      output(" Display: Built-in 5-inch CRT, 16 lines x 64 characters.");
+      output(" Significance: Predecessor to the IBM PC (1981).");
+      return startPrompt();
+    }
+
+    if (cmd === "clear") {
+      // Keep only the boot/system log
+      terminal.innerHTML = bootLog;
+      return startPrompt();
+    }
+
+    if (cmd.startsWith("mode")) {
+      if (cmd.includes("apl")) { mode = "apl"; output("Switched to APL mode."); }
+      else if (cmd.includes("basic")) { mode = "basic"; output("Switched to BASIC mode."); }
+      return startPrompt();
+    }
+
+    // Global easter eggs should work in any mode
+    if (cmd === "time travel") {
+      output("Current Worldline Divergence Number : 1.048596 (Steins;Gate)");
+      return startPrompt();
+    }
+    if (cmd === "okabe") {
+      output("El Psy Kongroo");
+      return startPrompt();
+    }
+
+    // BASIC quick inline (non-numbered) commands
+    if (mode === "basic" && cmd.startsWith("print")) {
+      const expr = cmd.replace(/^print\s+/, "");
+      try { output(eval(expr)); } catch { output(expr.replace(/\"/g, "")); }
+      return startPrompt();
+    }
+    if (mode === "basic" && cmd === "list") {
+      Object.keys(program).map(Number).sort((a,b)=>a-b)
+        .forEach(n => output(n + " " + program[n]));
+      return startPrompt();
+    }
+    if (mode === "basic" && cmd === "run") {
+      runProgram();
+      return startPrompt();
+    }
+    if (mode === "basic" && cmd === "new") {
+      program = {};
+      output("Program cleared.");
+      return startPrompt();
+    }
+
+    // APL evaluation (very minimal): × → *, ÷ → /
+    if (mode === "apl" && cmd) {
+      try {
+        const expr = cmd.replace(/×/g,"*").replace(/÷/g,"/");
+        // naive evaluation for demo
+        output(eval(expr));
+      } catch {
+        output("DOMAIN ERROR");
+      }
+      return startPrompt();
+    }
+
+    if (cmd) {
+      output("SYNTAX ERROR");
+      return startPrompt();
+    }
+  }
+
+  function runProgram() {
+    const lines = Object.keys(program).map(Number).sort((a,b)=>a-b);
+    let pc = 0;
+    let loopGuard = 0;
+
+    while (pc < lines.length) {
+      if (loopGuard++ > 500) { output("** INFINITE LOOP DETECTED **"); break; }
+
+      const code = program[lines[pc]];
+      if (!code) { pc++; continue; }
+
+      if (code.startsWith("print")) {
+        const msg = code.replace(/^print\s+/i, "");
+        try { output(eval(msg)); } catch { output(msg.replace(/\"/g,"")); }
+      } else if (code.startsWith("goto")) {
+        const target = parseInt(code.replace(/^goto\s+/i, ""));
+        const idx = lines.indexOf(target);
+        if (idx >= 0) { pc = idx; continue; }
+      }
+      pc++;
+    }
+  }
+
+  // boot!
+  bootSequence();
+</script>
+</body>
+</html>

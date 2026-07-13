@@ -1,0 +1,39 @@
+# ── Operating System ─────────────────────────────────────────────
+Thumbs.db
+.DS_Store
+Desktop.ini
+ehthumbs.db
+*.lnk
+
+# ── IDE / Editor ────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-workspace
+
+# ── Python ──────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# ── Node / JS ───────────────────────────────────────────────────
+node_modules/
+npm-debug.log
+
+# ── Archives (already extracted) ───────────────────────────────
+ibm-5100-emulator-main.zip
+Nuevo Documento de texto.txt
+
+# ── Binary artifacts ────────────────────────────────────────────
+*.obj
+*.o
+*.lib
+*.exp
+
+# ── Logs ───────────────────────────────────────────────────────
+*.log

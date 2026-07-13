@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IBM 5100 Emulator — Ultimate Collection</title>
+  <meta name="description" content="Web-based IBM 5100 emulator. Run BASIC and APL programs in your browser. Full MAME integration, AI bridge, and documentation archive.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🖥️</text></svg>">
+</head>
+<noscript>
+  <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:#050505;color:#00ff41;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;z-index:999999;text-align:center;padding:20px;">
+    <div>
+      <h1 style="font-size:1.5rem;margin-bottom:15px;">IBM 5100 Emulator</h1>
+      <p>JavaScript is required to run the emulator.</p>
+      <p style="margin-top:10px;font-size:0.8rem;opacity:0.6;">Please enable JavaScript and reload the page.</p>
+    </div>
+  </div>
+</noscript>
+<body>
+
+  <!-- ── Scanlines ────────────────────────────────────────────── -->
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- ── Loading Screen ───────────────────────────────────────── -->
+  <div class="loading-screen" role="alert" aria-label="Loading IBM 5100 emulator">
+    <div class="loading-text">IBM 5100</div>
+    <div class="loading-subtext" id="loading-subtext">Initializing...</div>
+    <div class="loading-bar-container">
+      <div class="loading-bar"></div>
+    </div>
+  </div>
+
+  <!-- ── Particles Background ─────────────────────────────────── -->
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+  <!-- ── Scroll Progress ──────────────────────────────────────── -->
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <!-- ── Back to Top ──────────────────────────────────────────── -->
+  <button class="back-to-top" aria-label="Back to top">↑</button>
+
+  <!-- ── Header ───────────────────────────────────────────────── -->
+  <header class="header">
+    <h1>IBM 5100</h1>
+    <p class="subtitle">THE PORTABLE COMPUTER · SEPTEMBER 1975</p>
+    <div class="badges">
+      <span class="badge">BASIC</span>
+      <span class="badge">APL</span>
+      <span class="badge">PALM CPU</span>
+      <span class="badge">5" CRT</span>
+    </div>
+  </header>
+
+  <!-- ── Main Chassis ─────────────────────────────────────────── -->
+  <main class="ibm-chassis" role="application" aria-label="IBM 5100 Emulator">
+
+    <!-- Logo Bar -->
+    <div class="ibm-logo">
+      <span class="logo-text">IBM</span>
+      <span class="model-badge">5100</span>
+    </div>
+
+    <!-- Power LED -->
+    <div class="power-led">
+      <span class="led" aria-hidden="true"></span>
+      <span class="led-label">POWER</span>
+    </div>
+
+    <!-- CRT Screen -->
+    <div class="crt-container">
+      <div class="crt-screen">
+        <div class="crt-glow" aria-hidden="true"></div>
+        <div id="terminal" role="log" aria-live="polite" aria-label="Terminal output"></div>
+      </div>
+    </div>
+
+    <!-- Controls / Keyboard Area -->
+    <div class="controls-area">
+      <div class="control-group">
+        <button class="key-btn green" onclick="helpClick()" aria-label="Help">HELP</button>
+        <button class="key-btn" onclick="runClick()" aria-label="Run program">RUN</button>
+        <button class="key-btn" onclick="listClick()" aria-label="List program">LIST</button>
+        <button class="key-btn" onclick="newClick()" aria-label="New program">NEW</button>
+        <button class="key-btn" onclick="clearClick()" aria-label="Clear terminal">CLR</button>
+      </div>
+      <div class="tape-indicators">
+        <span class="tape-indicator">
+          <span class="dot active"></span>
+          TAPE
+        </span>
+        <span class="tape-indicator">
+          <span class="dot"></span>
+          I/O
+        </span>
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span class="status-item">
+        <span class="label">MODE:</span>
+        <span class="value" id="mode-value">—</span>
+      </span>
+      <span class="status-item">
+        <span class="label">MEM:</span>
+        <span class="value" id="memory-value">—</span>
+      </span>
+      <span class="status-item">
+        <span class="label">SYS:</span>
+        <span class="value">READY</span>
+      </span>
+    </div>
+
+  </main>
+
+  <!-- ── Info Sections ────────────────────────────────────────── -->
+  <div class="sections">
+
+    <!-- About -->
+    <section class="section-card" id="about">
+      <h2>◈ About the IBM 5100</h2>
+      <p>
+        Released in <strong>September 1975</strong>, the IBM 5100 was one of the world's first
+        portable computers. Weighing approximately 55 pounds (25 kg), it featured a built-in
+        5-inch CRT display, a tape cartridge drive, and came with both <strong>BASIC</strong>
+        and <strong>APL</strong> programming language interpreters built into ROM.
+      </p>
+      <p>
+        At the heart of the IBM 5100 was the <strong>PALM</strong> (Put All Logic in Microcode)
+        processor — a 16-bit CPU implemented entirely in microcode. The machine could be equipped
+        with 16 KB to 64 KB of memory and cost between $9,000 and $24,000 (roughly $50,000–$130,000
+        in 2025 dollars).
+      </p>
+      <p>
+        Despite its high price, the IBM 5100 was a revolutionary machine — it was the first
+        computer to bundle a high-level language interpreter in ROM, and its portable design
+        (if you were strong enough to carry it!) foreshadowed the laptop revolution. It also
+        holds a special place in pop culture through the visual novel/anime <em>Steins;Gate</em>,
+        where the IBM 5100's unique architecture plays a key role in the plot.
+      </p>
+    </section>
+
+    <!-- How to Use -->
+    <section class="section-card" id="usage">
+      <h2>◈ How to Use</h2>
+      <p>
+        The emulator starts with an authentic boot sequence. Once it shows <strong>READY</strong>,
+        type a command and press <kbd>Enter</kbd>.
+      </p>
+
+      <h3>BASIC Mode (Default)</h3>
+      <p>Enter numbered lines to create programs:</p>
+      <pre style="color: var(--crt-green); background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.8rem; overflow-x: auto;">
+10 PRINT "HELLO WORLD"
+20 FOR I = 1 TO 5
+30 PRINT I
+40 NEXT I
+RUN</pre>
+
+      <h3>APL Mode</h3>
+      <p>Switch with <code>MODE APL</code>. Use special APL symbols:</p>
+      <pre style="color: var(--crt-green); background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.8rem;">
+2+2         →  4
+3×4         →  12
+10÷2        →  5
+(2+3)×(10-4) →  30</pre>
+
+      <h3>Full Command Reference</h3>
+      <div style="overflow-x: auto;">
+        <table class="commands-table">
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Mode</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="cmd">HELP</td><td>Both</td><td>Display command reference</td></tr>
+            <tr><td class="cmd">INFO</td><td>Both</td><td>System information</td></tr>
+            <tr><td class="cmd">CLEAR</td><td>Both</td><td>Clear terminal (preserves boot log)</td></tr>
+            <tr><td class="cmd">MODE BASIC</td><td>Both</td><td>Switch to BASIC interpreter</td></tr>
+            <tr><td class="cmd">MODE APL</td><td>Both</td><td>Switch to APL interpreter</td></tr>
+            <tr><td class="cmd">RUN</td><td>BASIC</td><td>Execute the current program</td></tr>
+            <tr><td class="cmd">LIST</td><td>BASIC</td><td>List all program lines</td></tr>
+            <tr><td class="cmd">NEW</td><td>BASIC</td><td>Clear program memory</td></tr>
+            <tr><td class="cmd">PRINT &lt;expr&gt;</td><td>BASIC</td><td>Evaluate and display expression</td></tr>
+            <tr><td class="cmd">GOTO &lt;line&gt;</td><td>BASIC</td><td>Jump to program line</td></tr>
+            <tr><td class="cmd">&lt;line&gt; &lt;code&gt;</td><td>BASIC</td><td>Add or replace a program line</td></tr>
+            <tr><td class="cmd">&lt;expr&gt;</td><td>APL</td><td>Evaluate APL expression</td></tr>
+            <tr><td class="cmd">TIME TRAVEL</td><td>Both</td><td>🥚 Easter egg</td></tr>
+            <tr><td class="cmd">OKABE</td><td>Both</td><td>🥚 El Psy Kongroo</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MAME Integration -->
+    <section class="section-card" id="mame">
+      <h2>◈ MAME Integration</h2>
+      <p>
+        This project includes <strong>MAME 0.287</strong> with full IBM 5100 and IBM 5110 ROM
+        support. For the full emulation experience:
+      </p>
+      <pre style="color: var(--crt-green); background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.8rem; overflow-x: auto;">
+# Launch IBM 5100 in windowed mode
+./mame.exe ibm5100 -window
+
+# Skip game info warning
+./mame.exe ibm5100 -window -skip_gameinfo</pre>
+      <h3>Keyboard Controls</h3>
+      <table class="commands-table">
+        <thead>
+          <tr><th>Key</th><th>IBM 5100 Function</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="cmd">Enter</td><td>↵ (Return key)</td></tr>
+          <tr><td class="cmd">Backspace</td><td>← (Backspace)</td></tr>
+          <tr><td class="cmd">Shift+Enter</td><td>ATTN (Attention)</td></tr>
+          <tr><td class="cmd">F1</td><td>PROCEED</td></tr>
+          <tr><td class="cmd">F2</td><td>EXECUTE</td></tr>
+          <tr><td class="cmd">F3</td><td>PRINT</td></tr>
+          <tr><td class="cmd">Esc</td><td>Enter/Exit MAME console</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- AI Bridge -->
+    <section class="section-card" id="bridge">
+      <h2>◈ AI Bridge</h2>
+      <p>
+        The <code>IBM5100_BRIDGE.py</code> script connects the IBM 5100 emulator to
+        <strong>NVIDIA AI</strong>, allowing you to ask questions, time-travel, and
+        audit assets — all from within the IBM 5100 terminal.
+      </p>
+      <pre style="color: var(--crt-green); background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.8rem; overflow-x: auto;">
+pip install openai pyautogui
+python bridge/IBM5100_BRIDGE.py</pre>
+      <table class="commands-table">
+        <thead>
+          <tr><th>Bridge Command</th><th>Function</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="cmd">AI: &lt;question&gt;</td><td>Query NVIDIA AI (Spanish)</td></tr>
+          <tr><td class="cmd">VIAJE: &lt;year&gt;</td><td>Time-travel context</td></tr>
+          <tr><td class="cmd">AUDITAR</td><td>Audit USDT.z assets</td></tr>
+          <tr><td class="cmd">EXIT</td><td>Exit bridge</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Documentation -->
+    <section class="section-card" id="docs">
+      <h2>◈ Documentation Archive</h2>
+      <p>
+        This repository contains <strong>40+ original IBM documents</strong> including:
+      </p>
+      <ul>
+        <li>IBM 5100 Maintenance Information Manual (SY31-0405-2)</li>
+        <li>APL Reference &amp; Communications Reference manuals</li>
+        <li>BASIC &amp; APL Computer-Assisted Instruction manuals</li>
+        <li>IBM 5110 Maintenance Information Manual (SY31-0550-1)</li>
+        <li>IBM 5120 General Information &amp; Site Preparation Guide</li>
+        <li>PALM instruction set &amp; microcode documentation</li>
+        <li>1980s CORE newsletters, brochures, and PC-51 user manuals</li>
+        <li>VCF 2023 presentation: "PALM: The Processor That Powered the IBM 5100"</li>
+      </ul>
+    </section>
+
+  </div>
+
+  <!-- ── Footer ────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <p>
+      IBM 5100 Emulator — Part of the
+      <a href="https://github.com/constanza8999/IBM5100-Ultimate" target="_blank" rel="noopener">
+        IBM5100-Ultimate
+      </a>
+      collection
+    </p>
+    <p style="margin-top: 5px; font-size: 0.6rem;">
+      IBM is a registered trademark of International Business Machines Corporation.
+      MAME is a registered trademark of Gregory Ember.
+    </p>
+  </footer>
+
+  <!-- ── Scripts ───────────────────────────────────────────────── -->
+  <script src="js/script.js"></script>
+
+</body>
+</html>
