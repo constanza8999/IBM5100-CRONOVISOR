@@ -46,3 +46,36 @@ jobs:
             fi
           done
           echo "All required files present"
+
+  build-electron:
+    name: Build Electron App
+    runs-on: windows-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Pull Git LFS objects
+        run: git lfs pull
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Electron portable app
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: IBM5100-Ultimate-Windows-Portable
+          path: dist/*.exe
+          retention-days: 30
+          if-no-files-found: error
