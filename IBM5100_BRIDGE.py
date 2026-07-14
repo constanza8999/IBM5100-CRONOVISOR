@@ -63,7 +63,7 @@ class NvidiaChronosInterface:
         "2030": {
             "name": "Futuro 2030 (2030 - 2039)",
             "desc": "Futuro cercano, nano-tecnología",
-        ": "futuristic 2030s, nano technology, brain computer interface, flying cars, space colonies, ai companions"
+            "prompt": "futuristic 2030s, nano technology, brain computer interface, flying cars, space colonies, ai companions"
         },
         "2050": {
             "name": "Futuro 2050 (2050 - 2099)",
@@ -505,7 +505,9 @@ class NvidiaChronosInterface:
         print("  PERSONAJE: <nombre> -> Selecciona personaje (ej: hacker, robot)")
         print("  ESTILOS             -> Lista estilos visuales")
         print("  ESTILO: <nombre>    -> Selecciona estilo (ej: cyberpunk, retro)")
+        print("  TEMA: <descripcion> -> Define escena personalizada")
         print("  PREVIEW             -> Vista previa del prompt actual")
+        print("  RESET               -> Restaura configuración por defecto")
         print("  #TS -> Sello de Tiempo | [ -> Asignación (←)")
         
         while True:
@@ -585,11 +587,31 @@ class NvidiaChronosInterface:
                     else:
                         print(">>> ESTILO NO ENCONTRADO. Usa ESTILOS para ver opciones.")
                 
+                elif entrada.upper().startswith("TEMA:"):
+                    self.custom_prompt = entrada[5:].strip()
+                    if self.custom_prompt:
+                        print(f">>> TEMA PERSONALIZADO: {self.custom_prompt}")
+                        print(f">>> Prompt preview: {self.construir_prompt()}")
+                    else:
+                        print(">>> TEMA LIMPIADO (usando configuración de era/personaje)")
+                
+                elif entrada.upper() == "RESET":
+                    self.current_era = "2020"
+                    self.current_character = "cientifico"
+                    self.current_style = "realista"
+                    self.custom_prompt = ""
+                    print(">>> CONFIGURACIÓN RESTAURADA A VALORES POR DEFECTO")
+                    print(f"    Era: {self.ERAS[self.current_era]['name']}")
+                    print(f"    Personaje: {self.CHARACTERS[self.current_character]['name']}")
+                    print(f"    Estilo: {self.current_style}")
+                
                 elif entrada.upper() == "PREVIEW":
                     print("\n=== VISTA PREVIA DEL PROMPT ===")
                     print(f"Era: {self.ERAS[self.current_era]['name']}")
                     print(f"Personaje: {self.CHARACTERS[self.current_character]['name']}")
                     print(f"Estilo: {self.current_style}")
+                    if self.custom_prompt:
+                        print(f"Tema: {self.custom_prompt}")
                     print(f"\nPrompt completo:")
                     print(self.construir_prompt())
                     print()
