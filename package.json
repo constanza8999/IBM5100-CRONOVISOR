@@ -1,0 +1,111 @@
+{
+  "name": "ibm5100-ultimate",
+  "version": "2025.1.0",
+  "description": "IBM 5100 Ultimate Collection — Web emulator, MAME, AI bridge & documentation",
+  "author": "constanza8999",
+  "license": "GPL-2.0",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder build --win portable",
+    "build:dir": "electron-builder build --win portable --config.portable.artifactName=\"IBM5100-Ultimate-${version}-portable.${ext}\"",
+    "pack": "electron-builder build --win portable --dir"
+  },
+  "build": {
+    "appId": "com.ibm5100.ultimate",
+    "productName": "IBM 5100 Ultimate",
+    "compression": "maximum",
+    "files": [
+      "electron/**/*",
+      "emulator/**/*",
+      "bridge/**/*",
+      "wiki/**/*",
+      "CHANGELOG.md",
+      "README.md",
+      "COPYING"
+    ],
+    "extraResources": [
+      {
+        "from": "mame.exe",
+        "to": "mame.exe"
+      },
+      {
+        "from": "roms",
+        "to": "roms"
+      },
+      {
+        "from": "hash",
+        "to": "hash"
+      },
+      {
+        "from": "artwork",
+        "to": "artwork"
+      },
+      {
+        "from": "bgfx",
+        "to": "bgfx"
+      },
+      {
+        "from": "cfg",
+        "to": "cfg"
+      },
+      {
+        "from": "ctrlr",
+        "to": "ctrlr"
+      },
+      {
+        "from": "docs",
+        "to": "docs"
+      },
+      {
+        "from": "hlsl",
+        "to": "hlsl"
+      },
+      {
+        "from": "ini",
+        "to": "ini"
+      },
+      {
+        "from": "language",
+        "to": "language"
+      },
+      {
+        "from": "plugins",
+        "to": "plugins"
+      },
+      {
+        "from": "samples",
+        "to": "samples"
+      },
+      {
+        "from": "snap",
+        "to": "snap"
+      },
+      {
+        "from": "ui.ini",
+        "to": "ui.ini"
+      },
+      {
+        "from": "uismall.bdf",
+        "to": "uismall.bdf"
+      }
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "artifactName": "IBM5100-Ultimate-${version}-portable.${ext}"
+    },
+    "portable": {
+      "artifactName": "IBM5100-Ultimate-${version}-portable.${ext}",
+      "requestExecutionLevel": "user"
+    },
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  }
+}

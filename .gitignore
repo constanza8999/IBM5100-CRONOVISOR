@@ -35,5 +35,14 @@ Nuevo Documento de texto.txt
 *.lib
 *.exp
 
+# ── Large MAME binaries (exceed GitHub 100MB limit) ──────────────
+mame.exe
+mame.sym
+mame0287b_x64.exe
+
+# ── Electron Build ───────────────────────────────────────────
+dist/
+node_modules/
+
 # ── Logs ───────────────────────────────────────────────────────
 *.log
