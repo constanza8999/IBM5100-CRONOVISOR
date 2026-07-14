@@ -449,16 +449,29 @@ class NvidiaChronosInterface:
         
         return resultado_img
     
-    def explorar_timeline(self, year_inicio, year_fin, tema=None):
-        """Explora un rango de tiempo generando visualizaciones."""
+    def explorar_timeline(self, year_inicio, year_fin, tema=None, step=5):
+        """Explora un rango de tiempo generando visualizaciones con personalización completa."""
         print(f">>> EXPLORANDO TIMELINE: {year_inicio} -> {year_fin}")
+        print(f"    Era: {self.ERAS[self.current_era]['name']}")
+        print(f"    Personaje: {self.CHARACTERS[self.current_character]['name']}")
+        print(f"    Estilo: {self.current_style}")
+        print(f"    Intervalo: cada {step} años")
+        
+        # Calcular total de imágenes a generar
+        total = len(range(int(year_inicio), int(year_fin) + 1, step))
+        print(f">>> Se generarán {total} visualizaciones. ¿Continuar? (s/n)")
+        confirmar = input().strip().lower()
+        if confirmar != 's':
+            print(">>> EXPLORACIÓN CANCELADA")
+            return []
         
         resultados = []
-        for year in range(int(year_inicio), int(year_fin) + 1, 5):  # Cada 5 años
-            print(f"\n--- AÑO {year} ---")
-            resultado = self.viajar_y_visualizar(year, tema)
+        for i, year in enumerate(range(int(year_inicio), int(year_fin) + 1, step), 1):
+            print(f"\n--- AÑO {year} ({i}/{total}) ---")
+            resultado = self.generar_imagen_temporal(tema, year)
             resultados.append((year, resultado))
-            time.sleep(1)  # Pausa entre generaciones
+            if i < total:  # No pausar después de la última
+                time.sleep(2)  # Pausa entre generaciones para evitar rate limits
         
         print(f">>> EXPLORACIÓN TEMPORAL COMPLETADA: {len(resultados)} visualizaciones")
         return resultados
