@@ -1,8 +1,11 @@
-const CACHE_NAME = 'ibm5100-v1';
+const CACHE_NAME = 'ibm5100-v2';
 const ASSETS = [
   'index.html',
+  'gallery.html',
   'css/style.css',
+  'css/gallery.css',
   'js/script.js',
+  'js/gallery.js',
   'manifest.json'
 ];
 

@@ -17,9 +17,24 @@
             </div>
             <div class="header-right">
                 <span class="stats" id="gallery-stats">0 visualizations</span>
+                <button class="btn btn-primary" id="download-all-btn" title="Download all visualizations as ZIP">⬇ DOWNLOAD ALL</button>
+                <button class="btn btn-secondary" id="compare-mode-btn" title="Enter comparison mode">⇄ COMPARE</button>
                 <button class="btn btn-secondary" id="refresh-btn">↻ REFRESH</button>
             </div>
         </header>
+
+        <!-- Comparison Mode Bar -->
+        <div class="comparison-bar" id="comparison-bar" style="display: none;">
+            <div class="comparison-info">
+                <span id="comparison-count">0 selected</span>
+                <span class="comparison-hint">Select 2 images to compare</span>
+            </div>
+            <div class="comparison-actions">
+                <button class="btn btn-primary" id="compare-selected-btn" disabled>⇄ COMPARE SELECTED</button>
+                <button class="btn btn-danger" id="clear-selection-btn">✕ CLEAR</button>
+                <button class="btn btn-secondary" id="exit-compare-mode-btn">EXIT COMPARE</button>
+            </div>
+        </div>
 
         <!-- Filters -->
         <div class="gallery-filters">
@@ -105,6 +120,8 @@
             <div class="lightbox-info">
                 <h3 id="lightbox-title"></h3>
                 <p id="lightbox-meta"></p>
+                <div class="metadata-toggle-hint">Press I for AI prompt & metadata</div>
+                <div id="lightbox-metadata"></div>
                 <div class="lightbox-actions">
                     <button class="btn btn-primary" id="lightbox-open">Open File</button>
                     <button class="btn btn-danger" id="lightbox-delete">Delete</button>
@@ -114,6 +131,56 @@
             <button class="lightbox-next" id="lightbox-next">›</button>
         </div>
 
+        <!-- Comparison Modal -->
+        <div class="comparison-modal" id="comparison-modal">
+            <button class="comparison-close" id="comparison-close">×</button>
+            <div class="comparison-header">
+                <h2>Timeline Comparison</h2>
+                <div class="comparison-controls">
+                    <button class="btn btn-secondary" id="swap-images-btn">⇄ SWAP</button>
+                    <button class="btn btn-secondary" id="toggle-view-btn">◉ SPLIT VIEW</button>
+                </div>
+            </div>
+            <div class="comparison-container" id="comparison-container">
+                <div class="comparison-side comparison-left">
+                    <div class="comparison-label" id="comparison-left-label">Before</div>
+                    <img id="comparison-left-img" src="" alt="Before">
+                    <div class="comparison-info-panel" id="comparison-left-info"></div>
+                </div>
+                <div class="comparison-divider" id="comparison-divider">
+                    <div class="comparison-handle"></div>
+                </div>
+                <div class="comparison-side comparison-right">
+                    <div class="comparison-label" id="comparison-right-label">After</div>
+                    <img id="comparison-right-img" src="" alt="After">
+                    <div class="comparison-info-panel" id="comparison-right-info"></div>
+                </div>
+            </div>
+            <div class="comparison-footer">
+                <div class="comparison-diff">
+                    <span id="comparison-year-diff"></span>
+                </div>
+                <div class="comparison-actions">
+                    <button class="btn btn-primary" id="download-comparison">DOWNLOAD BOTH</button>
+                    <button class="btn btn-secondary" id="close-comparison">CLOSE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Progress Overlay -->
+        <div class="download-overlay" id="download-overlay">
+            <div class="download-modal">
+                <div class="download-icon">📦</div>
+                <h3>Creating ZIP Archive</h3>
+                <p id="download-status">Preparing files...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <span class="progress-text" id="progress-text">0%</span>
+                <button class="btn btn-danger" id="cancel-download-btn">CANCEL</button>
+            </div>
+        </div>
+
         <!-- Loading Overlay -->
         <div class="loading-overlay" id="loading-overlay">
             <div class="spinner"></div>
@@ -121,6 +188,8 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="js/gallery.js"></script>
 </body>
 </html>
