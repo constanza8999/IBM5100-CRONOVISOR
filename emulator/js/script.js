@@ -1076,6 +1076,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollProgress();
   initBackToTop();
   initKeyboardShortcuts();
+  loadSavedTheme();
   initLoadingScreen();
 
   // Expose button handlers globally
