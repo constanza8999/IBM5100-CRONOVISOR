@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBM 5100 - Timeline Gallery</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/gallery.css">
+</head>
+<body class="crt-screen">
+    <div class="gallery-container">
+        <!-- Header -->
+        <header class="gallery-header">
+            <div class="header-left">
+                <a href="index.html" class="back-btn">← EMULATOR</a>
+                <h1>TIMELINE GALLERY</h1>
+            </div>
+            <div class="header-right">
+                <span class="stats" id="gallery-stats">0 visualizations</span>
+                <button class="btn btn-secondary" id="refresh-btn">↻ REFRESH</button>
+            </div>
+        </header>
+
+        <!-- Filters -->
+        <div class="gallery-filters">
+            <div class="filter-group">
+                <label>ERA:</label>
+                <select id="filter-era">
+                    <option value="all">All Eras</option>
+                    <option value="antiguo">Antigüedad</option>
+                    <option value="medieval">Medieval</option>
+                    <option value="renacimiento">Renacimiento</option>
+                    <option value="victoriano">Victoriano</option>
+                    <option value="1970">1970s</option>
+                    <option value="1980">1980s</option>
+                    <option value="1990">1990s</option>
+                    <option value="2000">2000s</option>
+                    <option value="2020">2020s</option>
+                    <option value="2030">2030s</option>
+                    <option value="2050">2050s</option>
+                    <option value="3000">3000+</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>CHARACTER:</label>
+                <select id="filter-character">
+                    <option value="all">All Characters</option>
+                    <option value="cientifico">Científico</option>
+                    <option value="hacker">Hacker</option>
+                    <option value="viajero">Viajero del Tiempo</option>
+                    <option value="inventor">Inventor</option>
+                    <option value="programador">Programador</option>
+                    <option value="explorador">Explorador</option>
+                    <option value="robot">Robot/Android</option>
+                    <option value="alienigena">Extraterrestre</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>TYPE:</label>
+                <select id="filter-type">
+                    <option value="all">All Types</option>
+                    <option value="image">Images</option>
+                    <option value="video">Videos</option>
+                    <option value="live">Live Photos</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>SORT:</label>
+                <select id="filter-sort">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="year-asc">Year ↑</option>
+                    <option value="year-desc">Year ↓</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="gallery-search">
+            <input type="text" id="search-input" placeholder="Search visualizations...">
+            <button class="btn btn-primary" id="search-btn">SEARCH</button>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="gallery-grid" id="gallery-grid">
+            <!-- Items will be populated by JavaScript -->
+            <div class="empty-state" id="empty-state">
+                <div class="empty-icon">📷</div>
+                <h3>No Visualizations Yet</h3>
+                <p>Generate images and videos using the IBM bridge script:</p>
+                <code>VISUAL: 1980 hacker in neon-lit room</code>
+                <code>VIDEO: 2050 space exploration</code>
+                <code>LIVE: medieval castle at sunset</code>
+                <a href="index.html" class="btn btn-primary">Open Emulator</a>
+            </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div class="lightbox" id="lightbox">
+            <button class="lightbox-close" id="lightbox-close">×</button>
+            <div class="lightbox-content">
+                <img id="lightbox-image" src="" alt="Visualization">
+                <video id="lightbox-video" controls style="display:none;"></video>
+            </div>
+            <div class="lightbox-info">
+                <h3 id="lightbox-title"></h3>
+                <p id="lightbox-meta"></p>
+                <div class="lightbox-actions">
+                    <button class="btn btn-primary" id="lightbox-open">Open File</button>
+                    <button class="btn btn-danger" id="lightbox-delete">Delete</button>
+                </div>
+            </div>
+            <button class="lightbox-prev" id="lightbox-prev">‹</button>
+            <button class="lightbox-next" id="lightbox-next">›</button>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loading-overlay">
+            <div class="spinner"></div>
+            <p>Loading visualizations...</p>
+        </div>
+    </div>
+
+    <script src="js/gallery.js"></script>
+</body>
+</html>
