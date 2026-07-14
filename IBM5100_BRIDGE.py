@@ -456,6 +456,8 @@ class NvidiaChronosInterface:
         print(f"    Personaje: {self.CHARACTERS[self.current_character]['name']}")
         print(f"    Estilo: {self.current_style}")
         print(f"    Intervalo: cada {step} años")
+        if tema or self.custom_prompt:
+            print(f"    Tema: {tema or self.custom_prompt}")
         
         # Calcular total de imágenes a generar
         total = len(range(int(year_inicio), int(year_fin) + 1, step))
@@ -468,7 +470,9 @@ class NvidiaChronosInterface:
         resultados = []
         for i, year in enumerate(range(int(year_inicio), int(year_fin) + 1, step), 1):
             print(f"\n--- AÑO {year} ({i}/{total}) ---")
-            resultado = self.generar_imagen_temporal(tema, year)
+            # Usar tema proporcionado o el custom_prompt actual
+            tema_a_usar = tema if tema else self.custom_prompt if self.custom_prompt else None
+            resultado = self.generar_imagen_temporal(tema_a_usar, year)
             resultados.append((year, resultado))
             if i < total:  # No pausar después de la última
                 time.sleep(2)  # Pausa entre generaciones para evitar rate limits
@@ -638,11 +642,12 @@ class NvidiaChronosInterface:
                         except ValueError:
                             print(">>> ERROR: Los años deben ser números")
                             continue
+                        step = int(partes[2]) if len(partes) >= 3 else 5
                         if anio_inicio > anio_fin:
                             anio_inicio, anio_fin = anio_fin, anio_inicio
-                        resultados = self.explorar_timeline(anio_inicio, anio_fin)
+                        resultados = self.explorar_timeline(anio_inicio, anio_fin, step=step)
                     else:
-                        print(">>> USO: EXPLORAR: <año_inicio> <año_fin>")
+                        print(">>> USO: EXPLORAR: <año_inicio> <año_fin> [intervalo]")
                 
                 elif entrada.upper() == "AUDITAR":
                     print(">>> INICIANDO ESCANEO DE ACTIVOS EN TRUST WALLET...")
