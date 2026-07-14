@@ -231,6 +231,63 @@ IBM5100/
 
 ## 🚀 Getting Started
 
+### Prerequisites: Git LFS
+
+This repository uses **Git Large File Storage (LFS)** to manage large binary files (MAME executables, ROM archives, etc.). These files exceed GitHub's 100MB limit and require LFS to clone properly.
+
+> ⚠️ **Important**: If you don't have Git LFS installed, you'll only get text pointer files instead of actual binaries. The emulator and MAME won't work!
+
+#### Installation
+
+**Windows:**
+```bash
+# Download and install from https://git-lfs.github.com/
+# Or use winget:
+winget install GitHub.GitLFS
+git lfs install
+```
+
+**macOS:**
+```bash
+brew install git-lfs
+git lfs install
+```
+
+**Linux (Debian/Ubuntu):**
+```bash
+sudo apt install git-lfs
+git lfs install
+```
+
+#### Cloning with LFS
+
+```bash
+# If cloning fresh, LFS files are pulled automatically
+git clone https://github.com/constanza8999/IBM5100-CRONOVISOR.git
+
+# If you already cloned without LFS, run:
+git lfs install
+git lfs pull
+```
+
+#### LFS-Tracked Files
+
+| Pattern | Description | Size Example |
+|---------|-------------|---------------|
+| `*.exe` | MAME and tool executables | mame.exe (368MB) |
+| `*.sym` | Symbol files | mame.sym (165MB) |
+| `*.zip` | ROM archives | Various |
+| `*.chd` | CHD disk images | Various |
+| `*.7z` | 7-Zip archives | Various |
+
+> 💡 **Troubleshooting**: If you see `.git/lfs/objects/` errors or have pointer files instead of real binaries, run:
+> ```bash
+> git lfs install
+> git lfs pull
+> ```
+
+---
+
 ### Web Emulator (No Install)
 
 1. Open `emulator/index.html` in your browser
